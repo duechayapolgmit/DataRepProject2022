@@ -15,20 +15,38 @@ export default function BackEnd_EditPlayer(){
     const [name, setName] = useState('');
     const [points, setPoints] = useState('');
 
-    const [isLoading, setLoading] = useState(true);
+    // options for event (a database)
+    const [event, setEvent] = useState('mcc26');
+    const eventOptions = [
+        {
+            "label": "MCC 26",
+            "value": "mcc26"
+        },
+        {
+            "label": "MCC 28",
+            "value": "mcc28"
+        }]
+
+    // options for names in a particular event (database)
     const [nameOptions, setNameOptions] = useState(null);
+
+    // handle loading
+    const [isLoading, setLoading] = useState(true);
 
     const navigate = useNavigate(); // enable navigation across the app
 
     // componentDidMount
     useEffect(() => {
-       axios.get('http://localhost:4000/api/event/mcc28')
+        axios.get('http://localhost:4000/api/event/'+event)
             .then((response)=>{
                 let nameOptions = response.data.map((item) => ({
                     "label": item.name,
                     "value": item.name
                 }))
                 setNameOptions(nameOptions);
+                setPlace('');
+                setTeam('');
+                setPoints('');
                 setLoading(false);
             })
     },[]);
@@ -48,17 +66,34 @@ export default function BackEnd_EditPlayer(){
     }
 
     // Handle if name is change or not
-    const onChangeName = (e) => {
+    const onChangeEvent = (e) => {
+        setLoading(true)
+        setEvent(e.target.value)
+        axios.get('http://localhost:4000/api/event/'+e.target.value)
+            .then((response)=>{
+                let nameOptions = response.data.map((item) => ({
+                    "label": item.name,
+                    "value": item.name
+                }))
+                setNameOptions(nameOptions);
+                setPlace('');
+                setTeam('');
+                setPoints('');
+                setLoading(false);
+            })
+    }
+
+    // Handle if event is changed or not
+    const onChangeName = e => {
         setLoading(true)
         setName(e.target.value)
-        axios.get('http://localhost:4000/api/event/mcc28/'+e.target.value)
+        axios.get('http://localhost:4000/api/event/'+event+"/"+e.target.value)
             .then((response)=>{
                 setPlace(response.data.place);
                 setTeam(response.data.team);
                 setPoints(response.data.points);
                 setLoading(false)
             })
-        
     }
 
     const handleSubmit = (e) => {
@@ -85,6 +120,12 @@ export default function BackEnd_EditPlayer(){
             <Container>
                 <Heading>Edit a Player</Heading>
                 <form onSubmit={handleSubmit}>
+                    <Form.Field>
+                        <Form.Label>Event</Form.Label>
+                        <Form.Control>
+                            <Dropdown options={eventOptions} value={event} onChange={onChangeEvent}/>
+                        </Form.Control>
+                    </Form.Field>
                     <Form.Field>
                         <Form.Label>Name</Form.Label>
                         <Form.Control>

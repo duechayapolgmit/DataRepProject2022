@@ -14,6 +14,17 @@ export default function BackEnd_AddPlayer(){
     const [name, setName] = useState('');
     const [points, setPoints] = useState('');
 
+    const [event, setEvent] = useState('mcc26');
+    const eventOptions = [
+        {
+            "label": "MCC 26",
+            "value": "mcc26"
+        },
+        {
+            "label": "MCC 28",
+            "value": "mcc28"
+        }]
+
     const navigate = useNavigate(); // enable navigation across the app
 
     // componentDidMount
@@ -40,7 +51,7 @@ export default function BackEnd_AddPlayer(){
             points: points
         }
 
-        axios.post('http://localhost:4000/api/event/mcc28', newPlayer)
+        axios.post('http://localhost:4000/api/event/'+event, newPlayer)
             .then((res)=>{
                 console.log('nav')
                 navigate('/admin')
@@ -55,6 +66,12 @@ export default function BackEnd_AddPlayer(){
             <Container>
             <Heading>Add Player</Heading>
             <form onSubmit={handleSubmit}>
+                <Form.Field>
+                    <Form.Label>Event</Form.Label>
+                    <Form.Control>
+                        <Dropdown options={eventOptions} value={event} onChange={e => setEvent(e.target.value)}/>
+                    </Form.Control>
+                </Form.Field>
                 <Form.Field>
                     <Form.Label>Placement</Form.Label>
                     <Form.Control>
@@ -88,5 +105,15 @@ export default function BackEnd_AddPlayer(){
             </Container>
             
         </div>
+    )
+}
+
+function Dropdown({value, options, onChange}){
+    return(
+        <Form.Select value={value} onChange={onChange}>
+            {options.map((option) => (
+                <option key={option.value} value={option.value}>{option.label}</option>
+            ))}
+        </Form.Select>
     )
 }

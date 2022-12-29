@@ -20,21 +20,26 @@ export default function Login({setToken}){
             password: password
         }
 
-        // POST axios, retrieving response for login
-        const response = axios.post('http://localhost:4000/login', 
+        if (login.username == "user123" && login.password == "123@user"){
+            // POST axios, retrieving response for login
+            axios.post('http://localhost:4000/login', 
             JSON.stringify({username, password}),
             {headers: { "Content-Type": "application/json"}})
             .then(result => {
                 setToken(result.data.token)
             });
+    
+            window.location.reload(false)
+        } else {
+            alert("Invalid username or password!")
+        }
         
-        window.location.reload(false)
     }
 
     // Render form
     return(
-        <div>
-            <Container>
+        <div className='LogIn'>
+            <Container alignContent='center'>
                 <Heading>MCC Stats Admin Login</Heading>
                 <form onSubmit={handleSubmit}>
                     <Form.Field>

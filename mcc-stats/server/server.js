@@ -117,28 +117,61 @@ app.get('/api/event/:event', (req,res) => {
 })
 
 // POST data - add data
-app.post('/api/event/mcc28', (req,res)=>{
-    mcc28Model.create({
-        place: req.body.place,
-        team: req.body.team,
-        name: req.body.name,
-        points: req.body.points,
-    })
+app.post('/api/event/:event', (req,res)=>{
+    if (req.params.event == 'mcc28'){
+        mcc28Model.create({
+            place: req.body.place,
+            team: req.body.team,
+            name: req.body.name,
+            points: req.body.points,
+        })
+    }
+    if (req.params.event == 'mcc26') {
+        mcc26Model.create({
+            place: req.body.place,
+            team: req.body.team,
+            name: req.body.name,
+            points: req.body.points,
+        })
+    }
 
-    res.send("Player added to MCC 28 - "+req.body.name)
+    // handle if the player added is new (no uuid)
+    playerModel.findOne({name:req.params.name}, async (err,resFind) => {
+        // If found, return
+        if (resFind != null) return;
+
+        // If not, create a new collection
+        createPlayer(req.params.name)
+    })
+    
 })
 
 // GET data - get data from player
-app.get('/api/event/mcc28/:name', (req,res)=>{
-    mcc28Model.findOne({name:req.params.name},(err,data)=>{
-        res.json(data);
-    })
+app.get('/api/event/:event/:name', (req,res)=>{
+    if (req.params.event == 'mcc28'){
+        mcc28Model.findOne({name:req.params.name},(err,data)=>{
+            res.json(data);
+        })
+    }
+    if (req.params.event == 'mcc26'){
+        mcc26Model.findOne({name:req.params.name},(err,data)=>{
+            res.json(data);
+        })
+    }
+    
 })
 
 // PUT request - update player info by finding name and update
-app.put('/api/event/mcc28/:name', (req,res)=>{
-    mcc28Model.findOneAndUpdate({name:req.params.name},req.body,{new:true},
-        (err,data)=>{res.send(data);})
+app.put('/api/event/:event/:name', (req,res)=>{
+    if (req.params.event == 'mcc28'){
+        mcc28Model.findOneAndUpdate({name:req.params.name},req.body,{new:true},
+            (err,data)=>{res.send(data);})
+    }
+    if (req.params.event == 'mcc26'){
+        mcc26Model.findOneAndUpdate({name:req.params.name},req.body,{new:true},
+            (err,data)=>{res.send(data);})
+    }
+    
 })
 
 // DELETE request - delete a player from the database via name

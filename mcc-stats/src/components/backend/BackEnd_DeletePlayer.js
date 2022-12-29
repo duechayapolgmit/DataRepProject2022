@@ -15,11 +15,23 @@ export default function BackEnd_DeletePlayer(){
     const [isLoading, setLoading] = useState(true);
     const [nameOptions, setNameOptions] = useState(null);
 
+    // options for event (a database)
+    const [event, setEvent] = useState('mcc26');
+    const eventOptions = [
+        {
+            "label": "MCC 26",
+            "value": "mcc26"
+        },
+        {
+            "label": "MCC 28",
+            "value": "mcc28"
+        }]
+
     const navigate = useNavigate(); // enable navigation across the app
 
     // componentDidMount
     useEffect(() => {
-       axios.get('http://localhost:4000/api/event/mcc28')
+        axios.get('http://localhost:4000/api/event/'+event)
             .then((response)=>{
                 let nameOptions = response.data.map((item) => ({
                     "label": item.name,
@@ -28,6 +40,7 @@ export default function BackEnd_DeletePlayer(){
                 setNameOptions(nameOptions);
                 setLoading(false);
             })
+       
     },[]);
 
     // Token block, only allowed access if have a token
@@ -43,6 +56,20 @@ export default function BackEnd_DeletePlayer(){
     // Handle if name is change or not
     const onChangeName = (e) => {
         setName(e.target.value)    
+    }
+
+    const onChangeEvent = e => {
+        setLoading(true)
+        setEvent(e.target.value)
+        axios.get('http://localhost:4000/api/event/'+e.target.value)
+            .then((response)=>{
+                let nameOptions = response.data.map((item) => ({
+                    "label": item.name,
+                    "value": item.name
+                }))
+                setNameOptions(nameOptions);
+                setLoading(false);
+            })
     }
 
     const handleSubmit = (e) => {
@@ -62,6 +89,12 @@ export default function BackEnd_DeletePlayer(){
             <Container>
                 <Heading>Delete a Player</Heading>
                 <form onSubmit={handleSubmit}>
+                <Form.Field>
+                        <Form.Label>Event</Form.Label>
+                        <Form.Control>
+                            <Dropdown options={eventOptions} value={event} onChange={onChangeEvent}/>
+                        </Form.Control>
+                    </Form.Field>
                     <Form.Field>
                         <Form.Label>Name</Form.Label>
                         <Form.Control>

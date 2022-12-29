@@ -6,6 +6,9 @@ td img{
   vertical-align: middle;
 }
 
+.LogIn {
+  padding-top: 25px;
+}
 .App-logo {
   height: 40vmin;
   pointer-events: none;
