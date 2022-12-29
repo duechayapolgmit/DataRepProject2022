@@ -70,6 +70,13 @@ app.use('/login', (req,res) => {
 
 /* API (only mcc 28 for now)*/
 
+// GET player
+app.get('/api/player/:name', (req,res)=>{
+    playerModel.findOne({name:req.params.name}, (err,data) => {
+        res.send(data);
+    });
+})
+
 // GET player uuid
 app.get('/api/uuid/:name', (req,res) => {
     // Find the player in the player collection
@@ -85,7 +92,41 @@ app.get('/api/uuid/:name', (req,res) => {
     })
 })
 
-// GET data
+// GET player's event history
+app.get('/api/playerHistory/:name', (req,res)=>{
+    let dataAll = [];
+    mcc26Model.findOne({name:req.params.name})
+        .then ((data) =>{
+            if (data != null) {
+                let toAdd = {
+                    _id: data._id,
+                    event: "MCC 26",
+                    place: data.place,
+                    team: data.team,
+                    points: data.points
+                }
+                dataAll.push(toAdd)
+            }
+        })
+        .then (()=>{
+            mcc28Model.findOne({name:req.params.name},(err,data)=>{
+                if (data != null) {
+                    let toAdd = {
+                        _id: data._id,
+                        event: "MCC 28",
+                        place: data.place,
+                        team: data.team,
+                        points: data.points
+                    }
+                    dataAll.push(toAdd)
+                }
+                res.send(dataAll)
+            })
+        })
+    
+})
+
+// GET event data
 app.get('/api/event/:event', (req,res) => {
     if (req.params.event == 'mcc28'){
         mcc28Model.aggregate([
@@ -175,8 +216,14 @@ app.put('/api/event/:event/:name', (req,res)=>{
 })
 
 // DELETE request - delete a player from the database via name
-app.delete('/api/event/mcc28/:name', (req,res)=>{
-    mcc28Model.findOneAndDelete({name:req.params.name}, (err,data)=>{res.send(data);})
+app.delete('/api/event/:event/:name', (req,res)=>{
+    if (req.params.event == 'mcc28'){
+        mcc28Model.findOneAndDelete({name:req.params.name}, (err,data)=>{res.send(data);})
+    }
+    if (req.params.event == 'mcc26'){
+        mcc26Model.findOneAndDelete({name:req.params.name}, (err,data)=>{res.send(data);})
+    }
+    
 })
 
 app.listen(port, () => console.log('API running at port '+port))
