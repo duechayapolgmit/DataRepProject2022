@@ -2,6 +2,9 @@
   
 }
 
+.pictureCentre{
+  vertical-align: middle;
+}
 td img{
   vertical-align: middle;
 }

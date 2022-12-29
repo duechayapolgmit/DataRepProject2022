@@ -76,7 +76,7 @@ export default function BackEnd_DeletePlayer(){
         e.preventDefault();
 
         // PUT REQUEST - put player back to list
-        axios.delete('http://localhost:4000/api/event/mcc28/'+ name)
+        axios.delete('http://localhost:4000/api/event/'+event+'/'+ name)
             .then((res)=>{
                 navigate('/admin')
             })

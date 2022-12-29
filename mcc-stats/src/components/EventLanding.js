@@ -2,7 +2,7 @@ import React from "react";
 import { Button, Container, Heading } from "react-bulma-components";
 import Nav from "./Nav";
 
-export default class Event_Landing extends React.Component{
+export default class EventLanding extends React.Component{
     render(){
         return (
             <div>
