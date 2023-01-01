@@ -107,7 +107,7 @@ export default function BackEnd_EditPlayer(){
         }
 
         // PUT REQUEST - put player back to list
-        axios.put('http://localhost:4000/api/event/mcc28/'+ name, newPlayer)
+        axios.put('http://localhost:4000/api/event/'+event+'/'+ name, newPlayer)
             .then((res)=>{
                 navigate('/admin')
             })

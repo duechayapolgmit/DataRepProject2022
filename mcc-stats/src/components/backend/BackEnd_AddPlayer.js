@@ -53,11 +53,12 @@ export default function BackEnd_AddPlayer(){
 
         axios.post('http://localhost:4000/api/event/'+event, newPlayer)
             .then((res)=>{
-                console.log('nav')
                 navigate('/admin')
-                
+                alert("Added player")
             })
-            .catch();
+            .catch((err)=>{
+                navigate('/admin')
+            });
     }
 
     return(
