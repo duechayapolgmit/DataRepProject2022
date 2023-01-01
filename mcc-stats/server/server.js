@@ -20,6 +20,11 @@ app.use(function(req, res, next) {
     next();
 });
 
+/* RETURN PAGE */
+const path = require('path');
+app.use(express.static(path.join(__dirname, '../build')));
+app.use('/static', express.static(path.join(__dirname, 'build//static')))
+
 /* DATABASE */
 const mongoose = require('mongoose');
 const { default: axios } = require('axios');
@@ -225,6 +230,11 @@ app.delete('/api/event/:event/:name', (req,res)=>{
     }
     
 })
+
+// GET request, return the webpage - server static file to app
+app.get('*', (req,res) =>{
+    res.sendFile(path.join(__dirname+'/../build/index.html')); // send to index.html
+    });
 
 app.listen(port, () => console.log('API running at port '+port))
 
