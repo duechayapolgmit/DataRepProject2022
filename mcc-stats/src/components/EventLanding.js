@@ -17,4 +17,4 @@ export default class EventLanding extends React.Component{
         )
         
     }
-}
+}  
