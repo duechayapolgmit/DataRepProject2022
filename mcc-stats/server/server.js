@@ -73,7 +73,7 @@ app.use('/login', (req,res) => {
     });
 })
 
-/* API (only mcc 28 for now)*/
+/* API*/
 
 // GET player
 app.get('/api/player/:name', (req,res)=>{
